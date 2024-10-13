@@ -1,11 +1,20 @@
 import express from "express";
 import 'dotenv/config';
+import transactionRouter from "./route/transaction.route.js";
 
 const app = express();
 
 const port = process.env.PORT || 5000
 
 app.use(express.json());
+
+// middleware to log to console
+app.use((req, res, next) => {
+  console.log(req.path, req.method);
+  next();
+}); 
+
+app.use("/api/transactions", transactionRouter);
 
 app.listen(port, () => {
   console.log(
