@@ -28,6 +28,30 @@ export async function getTransactions({ startDate, endDate, pool, page, offset }
   }
 }
 
+export async function getLiveTransactions({ pool, page, offset }) {
+  try {
+    const response = await axios.get(`${apiUrl}/live`, {
+      params: {
+        pool,
+        page,
+        offset,
+      }
+    });
+
+    return response.data.result; 
+  } catch (error) {
+    let message;
+    if (error.response) {
+      message = `${error.message} ${error.response.data.message}`;
+    } else {
+      // Handle non-Axios errors (e.g., network errors)
+      message = `Network or unknown error: ${error.message}`
+    }
+  
+    throw new Error(message);
+  }
+}
+
 /**
  * Fetches the price of the specified cryptocurrency at the specified time
  * @param {Date} param.time - Date object representing the time to fetch price at.

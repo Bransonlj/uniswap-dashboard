@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { getTransactions } from '../services/transactionService';
+import React, { useEffect, useState } from 'react'
+import { getLiveTransactions, getTransactions } from '../services/transactionService';
 
 const defaultPool = 'WETH-USDC';
 const defaultPage = 1;
@@ -11,37 +11,64 @@ export default function QueryForm({ setTransactions }) {
   const [page, setPage] = useState(defaultPage);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isLiveState, setIsLiveState] = useState(true);
 
-  async function handleSearch(resetPage=true) {
+  async function handleFetch() {
     setError('');
     setIsLoading(true);
     setTransactions([]);
-    const newPage = resetPage ? defaultPage : page;
-    if (resetPage) {
-      setPage(defaultPage);
-    }
     try {
-      const transactions = await getTransactions({
-        startDate: new Date(startDate),
-        endDate: new Date(endDate),
-        pool: defaultPool,
-        page: newPage,
-        offset,
-      });
+      let transactions
+      if (isLiveState) {
+        transactions = await getLiveTransactions({
+          pool: defaultPool,
+          page,
+          offset,
+        })
+      } else {
+        transactions = await getTransactions({
+          startDate: new Date(startDate),
+          endDate: new Date(endDate),
+          pool: defaultPool,
+          page,
+          offset,
+        });
+      }
+
       setTransactions(transactions);
     } catch (error) {
       setError(error.message);
     }
-
     setIsLoading(false);
   }
+
+  function handleSearch() {
+    if (!isLiveState && page === defaultPage) {
+      // wont trigger useffect hook, manually refresh
+      handleFetch();
+    } else {
+      setPage(defaultPage);
+      setIsLiveState(false);
+    }
+
+    // create filter pill
+  }
+
+  function clearFilter() {
+    setPage(defaultPage);
+    setIsLiveState(true);
+  }
+
+  useEffect(() => {
+    handleFetch();
+  }, [isLiveState, page, offset]);
 
   return (
     <div>
       <div>
-        <button disabled={page == 1} onClick={() => {setPage(page - 1); handleSearch(false);}}>back</button>
+        <button disabled={page == 1} onClick={() => setPage(page - 1)}>back</button>
         <span>Page {page}</span>
-        <button onClick={() => {setPage(page + 1); handleSearch(false);}}>next</button>
+        <button onClick={() => setPage(page + 1)}>next</button>
       </div>
 
       <label>Start date:</label>
@@ -54,6 +81,7 @@ export default function QueryForm({ setTransactions }) {
         <option value="75">75</option>
         <option value="100">100</option>
       </select>
+      { isLiveState ? <button onClick={handleFetch}>Refresh</button> : <button onClick={clearFilter}>Clear Filter</button>}
       { error && <span>{error}</span> }
       { isLoading && <span>LOADING</span> }
     </div>
