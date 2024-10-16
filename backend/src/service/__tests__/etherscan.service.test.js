@@ -18,7 +18,7 @@ describe('Etherscan API Service', () => {
   const mockApiKey = 'mockApiKey';
   const mockTransactionResult = {
     blockNumber: '12345',
-    timestamp: dummyTimeStamp,
+    timeStamp: dummyTimeStamp,
     hash: '0x123456789',
     gasUsed: '1000000',
     gasPrice: '1000000000000',
@@ -117,7 +117,7 @@ describe('Etherscan API Service', () => {
       expect(result).toEqual([
         {
           blockNumber: mockTransactionResult.blockNumber,
-          timestamp: mockTransactionResult.timestamp,
+          timestamp: mockTransactionResult.timeStamp,
           hash: mockTransactionResult.hash,
           ethFee: mockEthFee,
         }
@@ -158,7 +158,7 @@ describe('Etherscan API Service', () => {
 
       const mockTransaction = {
         blockNumber: mockTransactionResult.blockNumber,
-        timestamp: mockTransactionResult.timestamp,
+        timestamp: mockTransactionResult.timeStamp,
         hash: mockTransactionResult.hash,
         ethFee: mockEthFee,
       }

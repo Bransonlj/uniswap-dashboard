@@ -1,9 +1,9 @@
-import { getEtherscanApiKey } from "../config/config";
-import { getEthFromGas } from "../utils/ether";
+import { getEtherscanApiKey } from "../config/config.js";
+import { getEthFromGas } from "../utils/ether.js";
 import axios from 'axios';
 
 export const WETH_USDC_CONTRACT_ADDRESS = '0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640';
-export const ETHERSCAN_API_URL = 'https://api.etherscan.io/ap';
+export const ETHERSCAN_API_URL = 'https://api.etherscan.io/api';
 /**
  * Retrieves the contract address for the specified pool type.
  *
@@ -28,19 +28,20 @@ export function getContractAddress(pool) {
  */
 export async function getBlockNumberByTimestamp(timestamp) {
   let response;
+  const params = {
+    module: 'block',
+    action: 'getblocknobytime',
+    timestamp: timestamp,
+    closest: 'after',
+    apikey: getEtherscanApiKey(),
+  };
   try {
     response = await axios.get(ETHERSCAN_API_URL, {
-      params: {
-        module: 'block',
-        action: 'getblocknobytime',
-        timestamp: timestamp,
-        closest: 'after',
-        apikey: getEtherscanApiKey(),
-      }
+      params
     });
 
   } catch (error) {
-    console.error('Error querying Block number from Etherscan API: ', error.message);
+    console.error('Error querying Block number from Etherscan API: ', error.message, params);
     throw new Error('Failed to fetch Block number from Etherscan API.');
   }
 
@@ -83,7 +84,7 @@ export async function getTransactions({startBlock, endBlock, pool, page=1, offse
     return response.data.result.map(transaction => {
       return {
         blockNumber: transaction.blockNumber,
-        timestamp: transaction.timestamp,
+        timestamp: transaction.timeStamp,
         hash: transaction.hash,
         ethFee: getEthFromGas(transaction.gasUsed, transaction.gasPrice),
       };
