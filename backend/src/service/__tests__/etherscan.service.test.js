@@ -88,7 +88,7 @@ describe('Etherscan API Service', () => {
       axios.get.mockRejectedValue(new Error('Error'));
 
       await expect(getBlockNumberByTimestamp(dummyTimeStamp)).rejects.toThrow(
-        'Failed to fetch Block number from Etherscan API.'
+        'Error querying Block number from Etherscan API - Network or unknown error: Error'
       );
     });
   });
@@ -148,7 +148,7 @@ describe('Etherscan API Service', () => {
         pool: 'WETH-USDC',
         page: 1,
         offset: 100
-      })).rejects.toThrow('Failed to fetch transaction from Etherscan API.');
+      })).rejects.toThrow('Error querying transaction from Etherscan API - Network or unknown error: Error');
     });
   });
 });

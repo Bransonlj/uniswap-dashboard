@@ -1,4 +1,5 @@
 import { getEtherscanApiKey } from "../config/config.js";
+import { handleAxiosError } from "../utils/axiosUtils.js";
 import { getEthFromGas } from "../utils/ether.js";
 import axios from 'axios';
 
@@ -41,8 +42,7 @@ export async function getBlockNumberByTimestamp(timestamp) {
     });
 
   } catch (error) {
-    console.error('Error querying Block number from Etherscan API: ', error.message, params);
-    throw new Error('Failed to fetch Block number from Etherscan API.');
+    handleAxiosError(error, 'Error querying Block number from Etherscan API');
   }
 
   if (response.data.status === "0") {
@@ -91,7 +91,6 @@ export async function getTransactions({startBlock, endBlock, pool, page=1, offse
     });
 
   } catch (error) {
-    console.error('Error querying transaction from Etherscan API: ', error.message);
-    throw new Error('Failed to fetch transaction from Etherscan API.');
+    handleAxiosError(error, 'Error querying transaction from Etherscan API');
   }
 }

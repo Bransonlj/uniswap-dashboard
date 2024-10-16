@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { handleAxiosError } from '../utils/axiosUtils.js';
 
 export const BINANCE_API_URL = 'https://api.binance.com/api/v3/klines';
 
@@ -22,7 +23,6 @@ export async function getEthUsdtPriceAtTimestamp({ timestamp, symbol }) {
 
     return parseFloat(response.data[0][1]) // get openPrice of 1st interval
   } catch (error) {
-    console.error('Error querying price from Binance API: ', error.response.data.msg, timestamp);
-    throw new Error('Failed to fetch price from Binance API.');
+    handleAxiosError(error, 'Error querying price from Binance API');
   }
 }

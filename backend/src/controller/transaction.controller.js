@@ -49,8 +49,9 @@ export async function getManyTransactions(req, res) {
 
     return res.status(200).json({ result: usdtTransactions }); 
   } catch (error) {
-    console.error('Error fetching transactions:', error);
-    return res.status(500).json({ message: 'An error occurred while fetching transactions.' });
+    const message = 'Error fetching transactions: ' + error.message;
+    console.error(message);
+    return res.status(500).json({ message });
   }
 }
 
@@ -80,7 +81,8 @@ export async function getPrice(req, res) {
     
     return res.status(200).json({ result: { price } }); 
   } catch (error) {
-    console.error('Error fetching price:', error);
-    return res.status(500).json({ message: 'An error occurred while fetching price.' });
+    const message = 'Error fetching price: ' + error.message;
+    console.error(message);
+    return res.status(500).json({ message });
   }
 }
