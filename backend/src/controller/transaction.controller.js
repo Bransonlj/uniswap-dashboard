@@ -1,4 +1,4 @@
-import { getEthUsdtPriceAtTimestamp } from "../service/binance.service.js";
+import { getPriceAtTimestamp } from "../service/binance.service.js";
 import { getBlockNumberByTimestamp, getTransactions } from "../service/etherscan.service.js";
 
 /**
@@ -40,7 +40,7 @@ export async function getManyTransactions(req, res) {
 
     // convert result eth fee to usdt
     const usdtTransactions = await Promise.all(result.map(async (transaction) => {
-      const price = await getEthUsdtPriceAtTimestamp(transaction.timestamp);
+      const price = await getPriceAtTimestamp({ timestamp: transaction.timestamp, symbol: 'ETHUSDT' });
       return {
         ...transaction,
         usdtFee: price * transaction.ethFee,
@@ -77,7 +77,7 @@ export async function getPrice(req, res) {
       return res.status(400).json({ message: 'Invalid timestamp' });
     }
   
-    const price = await getEthUsdtPriceAtTimestamp({ timestamp, symbol });
+    const price = await getEthUsdtPriceAtTimestamp({ timestamp, symbol: 'ETHUSDT' });
     
     return res.status(200).json({ result: { price } }); 
   } catch (error) {

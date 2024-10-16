@@ -1,11 +1,15 @@
 import express from "express";
 import 'dotenv/config';
+import cors from 'cors';
 import transactionRouter from "./route/transaction.route.js";
 
 const app = express();
 
 const port = process.env.PORT || 5000
 
+app.use(cors({
+  origin: "*",
+}));
 app.use(express.json());
 
 // middleware to log to console

@@ -9,7 +9,7 @@ export const BINANCE_API_URL = 'https://api.binance.com/api/v3/klines';
  * @param {number} timestamp - The timestamp in seconds to get the price.
  * @returns {Promise<number>} - The price of ETH in USDT at the given timestamp.
  */
-export async function getEthUsdtPriceAtTimestamp({ timestamp, symbol }) {
+export async function getPriceAtTimestamp({ timestamp, symbol }) {
 
   try {
     const response = await axios.get(BINANCE_API_URL, {
