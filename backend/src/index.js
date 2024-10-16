@@ -3,7 +3,7 @@ import 'dotenv/config';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import transactionRouter from "./route/transaction.route.js";
-import { fetchAndSaveLiveTransactions } from "./controller/transaction.controller.js";
+import { recordLiveTransactions } from "./controller/transaction.controller.js";
 
 const app = express();
 
@@ -22,14 +22,14 @@ app.use((req, res, next) => {
 
 app.use("/api/transactions", transactionRouter);
 
-// Set an interval to poll the external API every X milliseconds
-const POLLING_INTERVAL = 30000; // 0.5 minute
-let intervalId;
+// Set an interval to poll for new transactions every 30 seconds
+const POLLING_INTERVAL = 30000;
+let intervalId; // cleanup
 
 mongoose.connect(process.env.MONGO_URL)
     .then(() => {
-      fetchAndSaveLiveTransactions('WETH-USDC');
-      intervalId = setInterval(() => fetchAndSaveLiveTransactions('WETH-USDC'), POLLING_INTERVAL);
+      recordLiveTransactions('WETH-USDC');
+      intervalId = setInterval(() => recordLiveTransactions('WETH-USDC'), POLLING_INTERVAL);
       app.listen(port, () => {
         console.log(
           `⚡️[server]: Server is running at http://localhost:${port}`

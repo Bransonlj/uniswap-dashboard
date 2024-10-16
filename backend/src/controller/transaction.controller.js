@@ -62,7 +62,7 @@ export async function getManyTransactions(req, res) {
  * @param {*} interval Set interval in miliseconds
  * @param {*} pool 
  */
-export async function fetchAndSaveLiveTransactions(pool) {
+export async function recordLiveTransactions(pool) {
   try {
     const endTimeStamp = Math.floor(Date.now() / 1000);
     let startTimeStamp = await getMostRecentTimestamp();
