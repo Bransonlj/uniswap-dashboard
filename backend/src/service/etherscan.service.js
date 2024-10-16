@@ -95,28 +95,3 @@ export async function getTransactions({startBlock, endBlock, pool, page=1, offse
     throw new Error('Failed to fetch transaction from Etherscan API.');
   }
 }
-
-/**
- * Queries the Etherscan API for all transactions corresponding to the specific address and
- * block range from all pages if pagination is enabled.
- *
- * @param {Object} options - The options params for the method.
- * @param {number} options.startBlock - The block number to start fetching transactions from.
- * @param {number} options.endBlock - The block number to end fetching transactions at.
- * @param {string} options.pool - The pool name (e.g. 'WETH-USDC').
- * @returns {Promise<Object[]>} List of transactions.
- */
-export async function getAllTransactions({startBlock, endBlock, pool}) {
-  const transactions = [];
-  let page = 1;
-  while (true) {
-    const result = await getTransactions({startBlock, endBlock, pool, page});
-    if (result.length === 0) {
-      break;
-    }
-
-    transactions.push(...result);
-  }
-
-  return transactions;
-}

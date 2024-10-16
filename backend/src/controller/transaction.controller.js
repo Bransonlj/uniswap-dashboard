@@ -1,5 +1,5 @@
 import { getEthUsdtPriceAtTimestamp } from "../service/binance.service.js";
-import { getAllTransactions, getBlockNumberByTimestamp, getTransactions } from "../service/etherscan.service.js";
+import { getBlockNumberByTimestamp, getTransactions } from "../service/etherscan.service.js";
 
 /**
  * Handles HTTP requests to fetch multiple transactions based on a time range, pool, and pagination details.
@@ -37,7 +37,6 @@ export async function getManyTransactions(req, res) {
     const startBlock = await getBlockNumberByTimestamp(start);
     const endBlock = await getBlockNumberByTimestamp(end);
 
-    console.log(startBlock, endBlock);
     const result = await getTransactions({startBlock, endBlock, pool, page, offset});
 
     // convert result eth fee to usdt

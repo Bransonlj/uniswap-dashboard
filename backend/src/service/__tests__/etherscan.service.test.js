@@ -151,41 +151,4 @@ describe('Etherscan API Service', () => {
       })).rejects.toThrow('Failed to fetch transaction from Etherscan API.');
     });
   });
-
-  describe('getAllTransactions', () => {
-    it('returns all transactions across all pages', async () => {
-
-
-      const mockTransaction = {
-        blockNumber: mockTransactionResult.blockNumber,
-        timestamp: mockTransactionResult.timeStamp,
-        hash: mockTransactionResult.hash,
-        ethFee: mockEthFee,
-      }
-
-      axios.get.mockResolvedValueOnce({
-        data: {
-          result: [mockTransactionResult, mockTransactionResult]
-        }
-      }).mockResolvedValueOnce({
-        data: {
-          result: [mockTransactionResult]
-        }
-      }).mockResolvedValueOnce({
-        data: {
-          result: []
-        }
-      });
-
-      const transactions = await getAllTransactions({ 
-        startBlock: 10000,  // dummy params
-        endBlock: 200000, 
-        pool: 'WETH-USDC', 
-      }); 
-      // verify all results compiled
-      expect(transactions).toEqual([mockTransaction, mockTransaction, mockTransaction]);
-      // verify api stops fetching after empty result
-      expect(axios.get).toHaveBeenCalledTimes(3);
-    });
-  });
 });
