@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import QueryForm from './components/QueryForm'
 import TransactionList from './components/TransactionList'
+import Summary from './components/Summary';
 
 export default function App() {
 
@@ -8,6 +9,7 @@ export default function App() {
 
   return (
     <div>
+      <Summary></Summary>
       <QueryForm setTransactions={setTransactions}></QueryForm>
       <TransactionList transactions={transactions}></TransactionList>
     </div>
