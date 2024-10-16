@@ -1,4 +1,4 @@
-import { getTransactions, getBlockNumberByTimestamp } from "../service/transaction.service.js";
+import { getBlockNumberByTimestamp, getTransactions } from "../service/etherscan.service.js";
 
 export async function getManyTransactions(req, res) {
   try {

@@ -1,8 +1,9 @@
-import { getApiKey } from "../utils/etherscan.js";
+import { getEtherscanApiKey } from "../config/config";
+import { getEthFromGas } from "../utils/ether";
 import axios from 'axios';
 
 export const WETH_USDC_CONTRACT_ADDRESS = '0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640';
-
+export const ETHERSCAN_API_URL = 'https://api.etherscan.io/ap';
 /**
  * Retrieves the contract address for the specified pool type.
  *
@@ -19,27 +20,22 @@ export function getContractAddress(pool) {
   }
 }
 
-export function getEthFromGas(gasUsed, gasPrice) {
-  return (gasUsed * gasPrice) / 1e18;
-}
-
 /**
- * Queries the Etherscan api for the block number that was mined at a certain timestamp.
+ * Queries the Etherscan API for the block number that was mined at a certain timestamp.
+ * 
  * @param {number} timestamp - The integer representing the Unix timestamp in seconds.
  * @returns {Promise<number>} - The resultant block number.
  */
 export async function getBlockNumberByTimestamp(timestamp) {
   let response;
   try {
-    const apiUrl = 'https://api.etherscan.io/api';
-
-    response = await axios.get(apiUrl, {
+    response = await axios.get(ETHERSCAN_API_URL, {
       params: {
         module: 'block',
         action: 'getblocknobytime',
         timestamp: timestamp,
         closest: 'after',
-        apikey: getApiKey(),
+        apikey: getEtherscanApiKey(),
       }
     });
 
@@ -56,12 +52,21 @@ export async function getBlockNumberByTimestamp(timestamp) {
   return response.data.result;
 
 }
-
+/**
+ * Queries the Etherscan API for transactions corresponding to the specific address, block range 
+ * and paginated options.
+ *
+ * @param {Object} options - The options params for the method.
+ * @param {number} options.startBlock - The block number to start fetching transactions from.
+ * @param {number} options.endBlock - The block number to end fetching transactions at.
+ * @param {string} options.pool - The pool name (e.g. 'WETH-USDC').
+ * @param {number} options.page - The page number for paginated results.
+ * @param {number} options.offset - The number of transactions per page.
+ * @returns {Promise<Object[]>} List of transactions.
+ */
 export async function getTransactions({startBlock, endBlock, pool, page=1, offset=100}) {
-  const apiUrl = 'https://api.etherscan.io/api';
-
   try {
-    const response = await axios.get(apiUrl, {
+    const response = await axios.get(ETHERSCAN_API_URL, {
       params: {
         module: "account",
         action: "tokentx",
@@ -71,7 +76,7 @@ export async function getTransactions({startBlock, endBlock, pool, page=1, offse
         startblock: startBlock,
         endblock: endBlock,
         sort: "desc",
-        apikey: getApiKey(),
+        apikey: getEtherscanApiKey(),
       }
     });
 
@@ -90,12 +95,22 @@ export async function getTransactions({startBlock, endBlock, pool, page=1, offse
   }
 }
 
-export function getAllTransactions(startBlock, endBlock, pool) {
+/**
+ * Queries the Etherscan API for all transactions corresponding to the specific address and
+ * block range from all pages if pagination is enabled.
+ *
+ * @param {Object} options - The options params for the method.
+ * @param {number} options.startBlock - The block number to start fetching transactions from.
+ * @param {number} options.endBlock - The block number to end fetching transactions at.
+ * @param {string} options.pool - The pool name (e.g. 'WETH-USDC').
+ * @returns {Promise<Object[]>} List of transactions.
+ */
+export async function getAllTransactions({startBlock, endBlock, pool}) {
   const transactions = [];
   let page = 1;
   while (true) {
-    const result = getTransactions({startBlock, endBlock, pool, page});
-    if (result.size() === 0) {
+    const result = await getTransactions({startBlock, endBlock, pool, page});
+    if (result.length === 0) {
       break;
     }
 
@@ -104,23 +119,3 @@ export function getAllTransactions(startBlock, endBlock, pool) {
 
   return transactions;
 }
-
-export async function getEthUsdtPriceAtTimestamp(timestamp) {
-  const apiUrl = 'https://api.binance.com/api/v3/klines';
-  try {
-    const response = await axios.get(apiUrl, {
-      params: {
-        symbol: 'ETHUSDT',
-        interval: '1s',
-        startTime: timestamp * 1000, // convert to miliseconds
-        endTime: timestamp * 1000,
-      }
-    });
-
-    return parseFloat(response.data[0][1]) // get openPrice of 1st interval
-  } catch (error) {
-    console.error('Error querying price from Binance API: ', error);
-    throw new Error('Failed to fetch price from Binance API.');
-  }
-}
-
