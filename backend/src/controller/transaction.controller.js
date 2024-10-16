@@ -77,7 +77,7 @@ export async function getPrice(req, res) {
       return res.status(400).json({ message: 'Invalid timestamp' });
     }
   
-    const price = await getEthUsdtPriceAtTimestamp({ timestamp, symbol: 'ETHUSDT' });
+    const price = await getPriceAtTimestamp({ timestamp, symbol });
     
     return res.status(200).json({ result: { price } }); 
   } catch (error) {
