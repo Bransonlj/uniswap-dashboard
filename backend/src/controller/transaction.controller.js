@@ -5,7 +5,6 @@ import { getBlockNumberByTimestamp, getTransactions } from "../service/etherscan
  * Handles HTTP requests to fetch multiple transactions based on a time range, pool, and pagination details.
  *
  * @param {Object} req - Express request object.
- * @param {Object} req.query - Query parameters from the request URL.
  * @param {number} req.query.start - The timestamp in seconds to start fetching transactions from.
  * @param {number} req.query.end - The timestamp in seconds to fetch transactions up to.
  * @param {string} req.query.pool - The pool name (e.g. 'WETH-USDC').
@@ -52,5 +51,36 @@ export async function getManyTransactions(req, res) {
   } catch (error) {
     console.error('Error fetching transactions:', error);
     return res.status(500).json({ message: 'An error occurred while fetching transactions.' });
+  }
+}
+
+/**
+ * Fetches the price of a specified cryptocurrency at a given timestamp.
+ *
+ * @param {Object} req - The request object from Express.
+ * @param {string} req.query.time - The timestamp for which to fetch the price (in seconds).
+ * @param {string} req.query.symbol - The trading pair symbol (e.g., 'ETHUSDT').
+ */
+export async function getPrice(req, res) {
+  try {
+    const { time, symbol } = req.query;
+
+    // verify params
+    if (!time || !symbol) {
+      return res.status(400).json({ message: 'Missing required parameters' });
+    }
+  
+    // Validate start and end timestamps
+    const timestamp = Number(time);
+    if (isNaN(timestamp)) {
+      return res.status(400).json({ message: 'Invalid timestamp' });
+    }
+  
+    const price = await getEthUsdtPriceAtTimestamp({ timestamp, symbol });
+    
+    return res.status(200).json({ result: { price } }); 
+  } catch (error) {
+    console.error('Error fetching price:', error);
+    return res.status(500).json({ message: 'An error occurred while fetching price.' });
   }
 }
