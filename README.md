@@ -1,4 +1,4 @@
-# Project Title
+# Uniswap Dashboard
 
 ## Table of Contents
 - [Running the Application](#running-the-application)
