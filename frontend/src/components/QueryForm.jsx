@@ -3,14 +3,17 @@ import { getLiveTransactions, getTransactions } from '../services/transactionSer
 import ErrorBlock from './ErrorBlock';
 import LoadingBlock from './LoadingBlock';
 
-const defaultPool = 'WETH-USDC';
-const defaultPage = 1;
+export const defaultPool = 'WETH-USDC';
+export const defaultPage = 1;
+export const defaultOffset = 50;
+
 const buttonStyle = 'bg-indigo-600 border-2 px-2 py-1 rounded-lg border-indigo-600 text-white hover:bg-indigo-400 disabled:bg-gray-200 disabled:border-gray-300';
+
 export default function QueryForm({ setTransactions }) {
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [offset, setOffset] = useState(50);
+  const [offset, setOffset] = useState(defaultOffset);
   const [page, setPage] = useState(defaultPage);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -67,14 +70,14 @@ export default function QueryForm({ setTransactions }) {
   return (
     <div>
       <div className='border-indigo-500 border-2 rounded-xl p-4 flex flex-row items-center gap-2'>
-        <label className='font-semibold'>Start date:</label>
-        <input className='border-gray-300 border-2 rounded-md' 
+        <label htmlFor='start-date' className='font-semibold'>Start date:</label>
+        <input id='start-date' className='border-gray-300 border-2 rounded-md' 
           type="datetime-local" 
           value={startDate} 
           onChange={(e) => setStartDate(e.target.value)} 
         />
-        <label className='font-semibold'>End date:</label>
-        <input className='border-gray-300 border-2 rounded-md' 
+        <label htmlFor='end-date' className='font-semibold'>End date:</label>
+        <input id='end-date' className='border-gray-300 border-2 rounded-md' 
           type="datetime-local" 
           value={endDate} 
           onChange={(e) => setEndDate(e.target.value)} 
