@@ -1,10 +1,9 @@
 import { getPriceAtTimestamp } from "../service/binance.service.js";
 import { getBlockNumberByTimestamp, getTransactions } from "../service/etherscan.service.js";
-import Transaction from "../model/transactionModel.js";
 import { getLiveTransactionsFromDb, getMostRecentTimestamp, saveTransactions } from "../service/transaction.service.js";
 
 /**
- * Handles HTTP requests to fetch multiple transactions based on a time range, pool, and pagination details.
+ * Fetch a list of transactions based on a time range, pool, and pagination details.
  *
  * @param {Object} req - Express request object.
  * @param {number} req.query.start - The timestamp in seconds to start fetching transactions from.
