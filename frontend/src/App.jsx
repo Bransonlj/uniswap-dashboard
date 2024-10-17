@@ -8,10 +8,14 @@ export default function App() {
   const [transactions, setTransactions] = useState([]);
 
   return (
-    <div>
-      <Summary></Summary>
-      <QueryForm setTransactions={setTransactions}></QueryForm>
-      <TransactionList transactions={transactions}></TransactionList>
+    <div className='flex justify-center'>
+      <div className='flex flex-col items-center max-w-5xl'>
+        <div className='flex flex-row justify-center'>
+          <QueryForm setTransactions={setTransactions}></QueryForm>
+          <Summary></Summary>
+        </div>
+        <TransactionList transactions={transactions}></TransactionList>
+      </div>
     </div>
   )
 }

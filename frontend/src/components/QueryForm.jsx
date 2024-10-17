@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { getLiveTransactions, getTransactions } from '../services/transactionService';
+import ErrorBlock from './ErrorBlock';
+import LoadingBlock from './LoadingBlock';
 
 const defaultPool = 'WETH-USDC';
 const defaultPage = 1;
+const buttonStyle = 'bg-indigo-600 border-2 px-2 py-1 rounded-lg border-indigo-600 text-white hover:bg-indigo-400 disabled:bg-gray-200 disabled:border-gray-300';
 export default function QueryForm({ setTransactions }) {
 
   const [startDate, setStartDate] = useState('');
@@ -50,8 +53,6 @@ export default function QueryForm({ setTransactions }) {
       setPage(defaultPage);
       setIsLiveState(false);
     }
-
-    // create filter pill
   }
 
   function clearFilter() {
@@ -65,25 +66,42 @@ export default function QueryForm({ setTransactions }) {
 
   return (
     <div>
-      <div>
-        <button disabled={page == 1} onClick={() => setPage(page - 1)}>back</button>
-        <span>Page {page}</span>
-        <button onClick={() => setPage(page + 1)}>next</button>
-      </div>
+      <div className='border-indigo-500 border-2 rounded-xl p-4 flex flex-row items-center gap-2'>
+        <label className='font-semibold'>Start date:</label>
+        <input className='border-gray-300 border-2 rounded-md' 
+          type="datetime-local" 
+          value={startDate} 
+          onChange={(e) => setStartDate(e.target.value)} 
+        />
+        <label className='font-semibold'>End date:</label>
+        <input className='border-gray-300 border-2 rounded-md' 
+          type="datetime-local" 
+          value={endDate} 
+          onChange={(e) => setEndDate(e.target.value)} 
+        />
 
-      <label>Start date:</label>
-      <input type="datetime-local" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-      <label >End date:</label>
-      <input type="datetime-local" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-      <button onClick={handleSearch} disabled={isLoading} >Search</button>
-      <select value={offset} onChange={(e) => setOffset(e.target.value)}>
-        <option value="50">50</option>
-        <option value="75">75</option>
-        <option value="100">100</option>
-      </select>
-      { isLiveState ? <button onClick={handleFetch}>Refresh</button> : <button onClick={clearFilter}>Clear Filter</button>}
-      { error && <span>{error}</span> }
-      { isLoading && <span>LOADING</span> }
+        <button className={buttonStyle} onClick={handleSearch} disabled={isLoading} >Search</button>
+        { isLiveState 
+          ? <button className={buttonStyle} 
+              onClick={handleFetch}
+            >Refresh</button> 
+          : <button className={buttonStyle} 
+              onClick={clearFilter}
+            >Clear Filter</button>
+        }
+      </div>
+      <div className='border-indigo-500 border-2 rounded-xl flex flex-row justify-end items-center gap-4 p-4'>
+        { error && <ErrorBlock message={error}></ErrorBlock> }
+        { isLoading && <LoadingBlock></LoadingBlock> }
+        <select className='p-2 border-2 rounded-lg border-gray-400 bg-gray-100' value={offset} onChange={(e) => setOffset(e.target.value)}>
+          <option value="50">50</option>
+          <option value="75">75</option>
+          <option value="100">100</option>
+        </select>
+        <button className={buttonStyle}  disabled={page == 1} onClick={() => setPage(page - 1)}>back</button>
+        <span className='font-semibold'>Page {page}</span>
+        <button className={buttonStyle}  onClick={() => setPage(page + 1)}>next</button>
+      </div>
     </div>
   )
 }
