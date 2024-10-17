@@ -58,9 +58,8 @@ export async function getManyTransactions(req, res) {
 }
 
 /**
- * 
- * @param {*} interval Set interval in miliseconds
- * @param {*} pool 
+ * Fetches live transaction data within an interval and saves results into database
+ * @param {string} pool - The pool name (e.g. 'WETH-USDC').
  */
 export async function recordLiveTransactions(pool) {
   try {
@@ -105,9 +104,21 @@ export async function recordLiveTransactions(pool) {
   }
 };
 
+/**
+ * Fetches live transaction data recorded in database.
+ * 
+ * @param {Object} req - The request object from Express.
+ * @param {string} req.query.pool - The pool name (e.g. 'WETH-USDC').
+ * @param {number} req.query.page - The page number for paginated results.
+ * @param {number} req.query.offset - The number of results per page.
+ */
 export async function getLiveTransactions(req, res) {
   try {
     const { pool, page, offset } = req.query;
+
+    if (!pool) {
+      return res.status(400).json({ message: 'Missing required parameters' });
+    }
 
     const pageNumber = parseInt(page, 10) || 1;
     const pageSize = parseInt(offset, 10) || 50;
@@ -125,6 +136,7 @@ export async function getLiveTransactions(req, res) {
     return res.status(500).json({ message });
   }
 }
+
 /**
  * Fetches the price of a specified cryptocurrency at a given timestamp.
  *
