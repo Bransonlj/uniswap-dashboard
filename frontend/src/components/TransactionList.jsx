@@ -1,5 +1,11 @@
 import React from 'react'
 
+/**
+ * Component renders a list of transactions in a table
+ * 
+ * @param {Object[]} param.transactions - List of transactions to display
+ * @returns 
+ */
 export default function TransactionList({ transactions }) {
   return (
     <div className='p-4 bg-indigo-500 border-2 border-indigo-700 rounded-xl w-full'>
@@ -19,10 +25,10 @@ export default function TransactionList({ transactions }) {
             <tr className='bg-white border-indigo-500 border-2' key={index}>
               <td className='text-center p-2 bg-indigo-100 font-semibold'>{index + 1}</td>
               <td className='text-center p-2 '>{new Date(transaction.timestamp * 1000).toLocaleString('en-SG')}</td>
-              <td className='text-center p-2 bg-indigo-100 font-semibold'>{transaction.usdtFee}</td>
-              <td className='text-center p-2 font-semibold'>{transaction.ethFee}</td>
-              <td className='text-center p-2 bg-indigo-100'>{transaction.hash}</td>
-              <td className='text-center p-2'>{transaction.blockNumber}</td>
+              <td className='text-center p-2 bg-indigo-100 font-semibold'>{transaction.usdtFee.toFixed(2)}</td>
+              <td className='text-center p-2 font-semibold'>{transaction.ethFee.toPrecision(5)}</td>
+              <td className='text-center p-2 truncate bg-indigo-100'>{transaction.hash}</td>
+              <td className='text-center truncate p-2'>{transaction.blockNumber}</td>
             </tr>
           ))}
         </tbody>

@@ -10,7 +10,7 @@ export default function App() {
   return (
     <div className='flex justify-center'>
       <div className='flex flex-col items-center max-w-5xl'>
-        <div className='flex flex-row justify-center'>
+        <div className='flex flex-row justify-center w-full'>
           <QueryForm setTransactions={setTransactions}></QueryForm>
           <Summary></Summary>
         </div>

@@ -27,8 +27,8 @@ describe('TransactionList Component', () => {
     // Check that the transaction data rows are rendered correctly
     mockTransactions.forEach((transaction) => {
       expect(screen.getByText(new Date(transaction.timestamp * 1000).toLocaleString('en-SG'))).toBeInTheDocument();
-      expect(screen.getByText(transaction.usdtFee)).toBeInTheDocument();
-      expect(screen.getByText(transaction.ethFee)).toBeInTheDocument();
+      expect(screen.getByText(transaction.usdtFee.toFixed(2))).toBeInTheDocument();
+      expect(screen.getByText(transaction.ethFee.toPrecision(5))).toBeInTheDocument();
       expect(screen.getByText(transaction.hash)).toBeInTheDocument();
       expect(screen.getByText(transaction.blockNumber)).toBeInTheDocument();
     });

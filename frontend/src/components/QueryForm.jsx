@@ -9,16 +9,29 @@ export const defaultOffset = 50;
 
 const buttonStyle = 'bg-indigo-600 border-2 px-2 py-1 rounded-lg border-indigo-600 text-white hover:bg-indigo-400 disabled:bg-gray-200 disabled:border-gray-300';
 
+/**
+ * Component handles filtering of transactions through query form and fetching form API.
+ * 
+ * @param {function} param.setTransactions - Function to set transactions state.
+ */
 export default function QueryForm({ setTransactions }) {
 
+  // form values
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [offset, setOffset] = useState(defaultOffset);
   const [page, setPage] = useState(defaultPage);
+
+  // fetch feedback
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // controls whether to fetch live or historical transactions
   const [isLiveState, setIsLiveState] = useState(true);
 
+  /**
+   * Handes fetching either live or historical transaction based on state (live, not live).
+   */
   async function handleFetch() {
     setError('');
     setIsLoading(true);
@@ -68,8 +81,8 @@ export default function QueryForm({ setTransactions }) {
   }, [isLiveState, page, offset]);
 
   return (
-    <div>
-      <div className='border-indigo-500 border-2 rounded-xl p-4 flex flex-row items-center gap-2'>
+    <div className='grow'>
+      <div className='border-indigo-500 border-4 rounded-xl p-4 flex flex-row justify-around items-center gap-2'>
         <label htmlFor='start-date' className='font-semibold'>Start date:</label>
         <input id='start-date' className='border-gray-300 border-2 rounded-md' 
           type="datetime-local" 
@@ -93,10 +106,11 @@ export default function QueryForm({ setTransactions }) {
             >Clear Filter</button>
         }
       </div>
-      <div className='border-indigo-500 border-2 rounded-xl flex flex-row justify-end items-center gap-4 p-4'>
+      <div className='border-indigo-500 border-4 rounded-xl flex flex-row justify-end items-center gap-4 p-4'>
         { error && <ErrorBlock message={error}></ErrorBlock> }
         { isLoading && <LoadingBlock></LoadingBlock> }
-        <select className='p-2 border-2 rounded-lg border-gray-400 bg-gray-100' value={offset} onChange={(e) => setOffset(e.target.value)}>
+        <label htmlFor="offset" className='font-semibold'>Offset:</label>
+        <select id='offset' className='p-2 border-2 rounded-lg border-gray-400 bg-gray-100' value={offset} onChange={(e) => setOffset(e.target.value)}>
           <option value="50">50</option>
           <option value="75">75</option>
           <option value="100">100</option>

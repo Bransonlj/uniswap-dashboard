@@ -29,7 +29,7 @@ describe('Summary Component', () => {
 
     // Wait for the price to be fetched and rendered
     await waitFor(() => {
-      expect(screen.getByText('ETH-USDT: 2500')).toBeInTheDocument();
+      expect(screen.getByText('2500')).toBeInTheDocument();
     });
   });
 
