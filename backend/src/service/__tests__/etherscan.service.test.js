@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getEtherscanApiKey } from "../../config/config";
-import { ETHERSCAN_API_URL, getAllTransactions, getBlockNumberByTimestamp, getContractAddress, getTransactions, WETH_USDC_CONTRACT_ADDRESS } from "../etherscan.service";
+import { ETHERSCAN_API_URL, getBlockNumberByTimestamp, getContractAddress, getTransactions, WETH_USDC_CONTRACT_ADDRESS } from "../etherscan.service";
 import { getEthFromGas } from "../../utils/ether";
 
 // mock functions
