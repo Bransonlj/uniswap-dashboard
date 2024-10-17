@@ -5,8 +5,8 @@ import { getLiveTransactionsFromDb, getMostRecentTimestamp, saveTransactions } f
 jest.mock('../../model/transactionModel');
 
 const mockTransactions = [
-    { blockNumber: 1, timestamp: '2024-10-16T10:00:00Z', hash: 'hash1', ethFee: 0.01, usdtFee: 1.0, pool: 'pool1' },
-    { blockNumber: 2, timestamp: '2024-10-16T10:05:00Z', hash: 'hash2', ethFee: 0.02, usdtFee: 2.0, pool: 'pool2' },
+    { blockNumber: 1, timestamp: 1728808129, hash: 'hash1', ethFee: 0.01, usdtFee: 1.0, pool: 'pool1' },
+    { blockNumber: 2, timestamp: 1728808130, hash: 'hash2', ethFee: 0.02, usdtFee: 2.0, pool: 'pool2' },
 ];
 
 describe('Transaction Collection Service', () => {
