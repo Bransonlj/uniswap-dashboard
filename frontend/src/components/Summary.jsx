@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { getPrice } from '../services/transactionService';
 import ErrorBlock from './ErrorBlock';
+import LoadingBlock from './LoadingBlock';
 
 const defaultSymbol = 'ETHUSDT';
 
@@ -28,8 +29,9 @@ export default function Summary() {
 
   return (
     <div className='border-2 rounded-lg border-indigo-600'>
+      { !price && <LoadingBlock></LoadingBlock>}
       { error && <ErrorBlock message={error}></ErrorBlock> }
-      { !error && <h2>ETH-USDT: {price}</h2> }
+      { !error && price && <h2>ETH-USDT: {price}</h2> }
     </div>
   )
 }
